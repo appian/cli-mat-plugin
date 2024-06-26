@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--ExampleExtensionPlugin extends CliMatPlugin by defining custom analyses for specific heap objects.-->
+    <!--The eclipse-plugin packaging compiles and builds a JAR: https://wiki.eclipse.org/Tycho/Packaging_Types#eclipse-plugin -->
+    <!--This plugin is built into the local p2 repository by CliMatRepository, through which this is installed to Eclipse MAT -->
+    <name>Example Extension Plugin</name>
+    <artifactId>ExampleExtensionPlugin</artifactId>
+    <packaging>eclipse-plugin</packaging>
+
+    <parent>
+        <groupId>com.appiansupport.mat</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../pom.xml</relativePath>
+        <version>2.1.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+<!-- Uncomment to use the CLIMAT dependencies bundle in this extension -->
+<!--        <dependency>-->
+<!--            <groupId>com.appiansupport.mat</groupId>-->
+<!--            <artifactId>CliMatDependencies</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.appiansupport.mat</groupId>
+            <artifactId>CliMatPlugin</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+<!-- Uncomment to use the CLIMAT dependencies bundle in this extension -->
+<!--            <plugin>-->
+<!--                &lt;!&ndash;Workaround to support Maven dependencies. &ndash;&gt;-->
+<!--                &lt;!&ndash;Copy CliMatDependencies JAR to target/dependencies&ndash;&gt;-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>copy-CliMatDependencies-JAR</id>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>initialize</phase>-->
+<!--                        <configuration>-->
+<!--                            <includeArtifactIds>CliMatDependencies</includeArtifactIds>-->
+<!--                            <stripVersion>true</stripVersion>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

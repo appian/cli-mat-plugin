@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="knownObjectResolver" name="Known Object Resolver" schema="schema/knownObjectResolver.exsd"/>
+   <extension id="execute" point="org.eclipse.core.runtime.applications">
+      <application
+              cardinality="singleton-global"
+              thread="main"
+              visible="true">
+         <run class="com.appiansupport.mat.Executor" />
+      </application>
+   </extension>
+</plugin>

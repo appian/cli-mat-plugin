@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension point="org.eclipse.mat.api.nameResolver">
+        <resolver impl="com.appiansupport.example.resolvers.DocumentNameResolver"/>
+    </extension>
+
+    <extension point="CliMatPlugin.knownObjectResolver">
+        <resolver impl="com.appiansupport.example.resolvers.ExampleKnownObjectResolver"/>
+    </extension>
+</plugin>

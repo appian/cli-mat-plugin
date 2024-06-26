@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--CliMatPlugin is the core of the project.-->
+    <!--The eclipse-plugin packaging compiles and builds a JAR: https://wiki.eclipse.org/Tycho/Packaging_Types#eclipse-plugin -->
+    <!--This plugin is built into the local p2 repository by CliMatRepository, through which this is installed to Eclipse MAT -->
+    <!--For future extensions, consider building a separate feature module with eclipse-feature packaging, as OSGi intended.  -->
+    <name>CLIMAT Plugin</name>
+    <artifactId>CliMatPlugin</artifactId>
+    <packaging>eclipse-plugin</packaging>
+
+    <parent>
+        <groupId>com.appiansupport.mat</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../pom.xml</relativePath>
+        <version>2.1.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.appiansupport.mat</groupId>
+            <artifactId>CliMatDependencies</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <!--Workaround to support Maven dependencies. -->
+                <!--Copy CliMatDependencies JAR to target/dependencies-->
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-CliMatDependencies-JAR</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <includeArtifactIds>CliMatDependencies</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
