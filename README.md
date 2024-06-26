@@ -5,7 +5,7 @@
 7. [General Considerations](#general-considerations)
 
 # Project Overview
-CLIMAT is a command line HPROF analyzer built on Eclipse MAT & supporting:
+CLIMAT is a command line HPROF analyzer built on [Eclipse MAT](https://github.com/eclipse-mat/mat) & supporting:
  - Leak Suspects Report
  - Reference Navigation (Incoming & Outgoing by Object or Class)
  - Dominator Tree
