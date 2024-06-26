@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--Creates a local P2 repository Zip for use in installing CliMatPlugin into Eclipse MAT-->
+    <name>CLIMAT Repository</name>
+    <artifactId>CliMatRepository</artifactId>
+    <!--https://wiki.eclipse.org/Tycho/eclipse-repository-->
+    <packaging>eclipse-repository</packaging>
+
+    <parent>
+        <groupId>com.appiansupport.mat</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../pom.xml</relativePath>
+        <version>2.1.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.appiansupport.mat</groupId>
+            <artifactId>CliMatFeature</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+    <!--Create a profile for each OS & specify the mat.executor property to be used by exec-maven-plugin to install CliMatPlugin-->
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <mat.executor>mat/MemoryAnalyzerc.exe</mat.executor>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <mat.executor>mat/MemoryAnalyzer</mat.executor>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <!--DD: Haven't tested this; may need to be changed-->
+                <mat.executor>mat/mat.app/Contents/MacOS/MemoryAnalyzer</mat.executor>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!--Use this to control the repository zip name-->
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-repository-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                    <!--<finalName>${project.artifactId}-${qualifiedVersion}</finalName>-->
+                    <finalName>${project.artifactId}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!--Uninstall then Install CliMat to Eclipse MAT via CliMatRepository repo JAR-->
+                <!--Using the P2 director plugin to point to the local P2 repo created by this module: -->
+                <!--https://help.eclipse.org/latest/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/p2_director.html-->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>uninstall-feature-into-MAT</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${mat.executor}</executable>
+                            <!--First uninstall will always fail, so let's allow that-->
+                            <successCodes>0,13</successCodes>
+                            <arguments>
+                                <argument>-application</argument>
+                                <argument>org.eclipse.equinox.p2.director</argument>
+                                <argument>-uninstallIU</argument>
+                                <argument>CliMatFeature.feature.group</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-feature-into-MAT</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${mat.executor}</executable>
+                            <arguments>
+                                <argument>-application</argument>
+                                <argument>org.eclipse.equinox.p2.director</argument>
+                                <!--https://wiki.eclipse.org/Equinox/p2/Zipped_Repos-->
+                                <argument>-repository</argument>
+                                <argument>jar:file:target/CliMatRepository.zip%21/</argument>
+                                <argument>-installIU</argument>
+                                <argument>CliMatFeature.feature.group</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+<!-- P2 Director plugin should replace raw exec-maven-plugin, but it can't find the Zip. It also doesn't allow failed uninstalls-->
+<!--            <plugin>-->
+<!--                <groupId>org.eclipse.tycho</groupId>-->
+<!--                <artifactId>tycho-p2-director-plugin</artifactId>-->
+<!--                <version>${tycho-version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>install-CliMat</id>-->
+<!--                        <goals>-->
+<!--                            <goal>director</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>package</phase>-->
+<!--                        <configuration>-->
+<!--                            <destination>../mat</destination>-->
+<!--                            <installIUs>CliMatFeature.feature.group</installIUs>-->
+<!--                            <repository>jar:file:target/CliMatRepository.zip%21/</repository>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
+</project>

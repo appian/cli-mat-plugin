@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<schema targetNamespace="CliMatPlugin" xmlns="http://www.w3.org/2001/XMLSchema">
+    <annotation>
+        <appInfo>
+            <meta.schema plugin="CliMatPlugin" id="knownObjectResolver" name="Known Object Resolver"/>
+        </appInfo>
+        <documentation>
+            Use this extension point to define custom information extraction logic for a given object type.
+        </documentation>
+    </annotation>
+
+    <element name="extension">
+        <complexType>
+            <annotation>
+                <appInfo>
+                    <meta.element />
+                </appInfo>
+            </annotation>
+            <sequence minOccurs="1" maxOccurs="unbounded">
+                <element ref="resolver"/>
+            </sequence>
+            <attribute name="point" type="string" use="required"/>
+            <attribute name="id" type="string"/>
+            <attribute name="name" type="string"/>
+        </complexType>
+    </element>
+    <element name="resolver">
+        <complexType>
+            <attribute name="impl" type="string" use="required"/>
+            <annotation>
+                <appinfo>
+                    <meta.attribute kind="java" basedOn=":com.appiansupport.mat.resolvers.KnownObjectResolver"/>
+                </appinfo>
+            </annotation>
+        </complexType>
+    </element>
+
+</schema>
